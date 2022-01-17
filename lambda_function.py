@@ -143,6 +143,7 @@ class CaptureLinesIntentHandler(AbstractRequestHandler):
         return (
             handler_input.response_builder
                 .speak(speak_output)
+                .set_should_end_session(False)
                 .response
         )
 
@@ -167,7 +168,7 @@ class ClearAllLinesHandler(AbstractRequestHandler):
             attributes_manager.persistent_attributes = lines_attributes
             attributes_manager.save_persistent_attributes()
             
-            speak_output = f'OK, I have cleared all trains in memory.'
+            speak_output = f'OK, I have cleared all lines in memory.'
             
             return (
                 handler_input.response_builder
@@ -177,7 +178,7 @@ class ClearAllLinesHandler(AbstractRequestHandler):
         else:
             return (
             handler_input.response_builder
-                .speak("Hm, it does not seem like you have told me any trains yet.")
+                .speak("Hm, it does not seem like you have told me any lines yet.")
                 .response
             )
 
@@ -249,7 +250,7 @@ class DeleteOneLineHandler(AbstractRequestHandler):
         else:
             return (
             handler_input.response_builder
-                .speak("Hm, it does not seem like you have told me any trains yet.")
+                .speak("Hm, it does not seem like you have told me any lines yet.")
                 .response
             ) 
 
@@ -284,7 +285,7 @@ class ListLinesHandler(AbstractRequestHandler):
         else:
             return (
             handler_input.response_builder
-                .speak("Hm, it does not seem like you have told me any trains yet.")
+                .speak("Hm, it does not seem like you have told me any lines yet.")
                 .response
             )
 
@@ -324,7 +325,8 @@ class CheckLineHandler(AbstractRequestHandler):
             
         return (
             handler_input.response_builder
-                .speak(check_subway.check_subway([slot.value])+"\n Please be aware that this line is not saved into my memory. To do that, say add, and then the line you want me to remember")
+                .speak(check_subway.check_subway([slot.value])+"\n Please be aware that this line is not yet saved into my memory. To do that, say add, and then the line you want me to remember")
+                .set_should_end_session(False)
                 .response
         ) 
 
@@ -339,7 +341,7 @@ class HelpIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         speak_output = "Here's what you can say to me. You can say you want to add a certain line so that I can check the status of the line.\
         You can say check, then say what lines do you want to check to check the status of the line without me remembering it.\
-        You can delete one or all of the lines I remembered. You can also say list my trains to have me list all the trains I have in memory. When you\
+        You can delete one or all of the lines I remembered. You can also say list my lines to have me list all the lines I have in memory. When you\
         are adding a shuttle or the Staten Island Railroad, just say their name. For shuttle between Times Square and Grand Central, say forty\
         second street shuttle or grand central shuttle. For shuttle between Rockaway Park and Broad Channel, say Rockaway Park Shuttle. For shuttle\
         between Franklin Avenue and Prospect Park, say Franklin Avenue Shuttle. For Staten Island Railroad, just say Staten Island Railroad. So, what do you want to do?"
@@ -347,6 +349,7 @@ class HelpIntentHandler(AbstractRequestHandler):
         return (
             handler_input.response_builder
                 .speak(speak_output)
+                .ask(speak_output)
                 .response
         )
 
